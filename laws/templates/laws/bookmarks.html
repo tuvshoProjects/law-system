@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>My Bookmarks</h2>
+
+{% for b in bookmarks %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <a href="{% url 'law_detail' b.law.id %}">
+                {{ b.law.title }}
+            </a>
+        </div>
+    </div>
+{% empty %}
+    <p>No bookmarks yet.</p>
+{% endfor %}
+
+{% endblock %}
