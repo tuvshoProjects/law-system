@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h3 class="mb-4">
+                "{{ law.title }}" -д шинэ хувилбар нэмэх
+            </h3>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Хүчин төгөлдөр болох огноо
+                    </label>
+                    <input type="date"
+                           name="effective_date"
+                           class="form-control"
+                           required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Агуулга
+                    </label>
+                    <textarea name="content"
+                              rows="10"
+                              class="form-control"
+                              required></textarea>
+                </div>
+
+                <button class="btn btn-success">
+                    💾 Хадгалах
+                </button>
+
+                <a href="{% url 'law_detail' law.id %}"
+                   class="btn btn-outline-secondary">
+                   ← Буцах
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

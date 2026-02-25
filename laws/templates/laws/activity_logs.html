@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">📊 Activity Log</h2>
+
+    {% if logs %}
+        {% for log in logs %}
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+
+                    <strong>{{ log.user.username }}</strong>
+                    —
+                    {{ log.action }}
+
+                    {% if log.law %}
+                        —
+                        <a href="{% url 'law_detail' log.law.id %}"
+                           class="text-decoration-none">
+                            {{ log.law.title }}
+                        </a>
+                    {% endif %}
+
+                    <div class="text-muted small mt-1">
+                        {{ log.created_at }}
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info">
+            Одоогоор activity байхгүй байна.
+        </div>
+    {% endif %}
+
+    <a href="{% url 'law_list' %}" class="btn btn-outline-dark mt-3">
+        ← Буцах
+    </a>
+
+</div>
+
+{% endblock %}

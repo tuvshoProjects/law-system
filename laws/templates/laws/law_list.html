@@ -1,17 +1,27 @@
 {% extends "base.html" %}
+{% load highlight %}
 
-{% block title %}Монгол хууль{% endblock %}
+{% block title %}Монгол Улсын Хууль{% endblock %}
 
 {% block content %}
 
-<h1 class="mb-4 text-center">Монгол хууль</h1>
+<h1 class="mb-4 text-center">
+    {% if query %}
+        "{{ query }}" хайлтын үр дүн
+    {% else %}
+        Монгол Улсын Хууль
+    {% endif %}
+</h1>
 
-<!-- 🔎 Search + Category Filter -->
+<!-- 🔎 SEARCH + CATEGORY FILTER -->
 <form method="GET" class="row g-2 mb-4">
 
     <div class="col-md-5">
-        <input type="text" name="q" value="{{ request.GET.q }}"
-               class="form-control" placeholder="Хуулийн нэр">
+        <input type="text"
+               name="q"
+               value="{{ query|default:'' }}"
+               class="form-control"
+               placeholder="Хуулийн нэр, агуулгаар хайх">
     </div>
 
     <div class="col-md-4">
@@ -19,7 +29,9 @@
             <option value="">-- Ангилал сонгох --</option>
             {% for cat in categories %}
                 <option value="{{ cat }}"
-                    {% if request.GET.category == cat %}selected{% endif %}>
+                    {% if request.GET.category == cat %}
+                        selected
+                    {% endif %}>
                     {{ cat }}
                 </option>
             {% endfor %}
@@ -27,37 +39,56 @@
     </div>
 
     <div class="col-md-3">
-        <button class="btn btn-primary w-100">Шүүх</button>
+        <button class="btn btn-primary w-100">
+            🔍 Хайх
+        </button>
     </div>
 
 </form>
 
-<!-- 📋 Law List -->
+<!-- 📋 LAW RESULTS -->
 {% for law in page_obj %}
     <div class="card mb-3 shadow-sm">
         <div class="card-body">
+
+            <!-- 🏷 Title -->
             <h5>
-                <a href="{% url 'law_detail' law.id %}" class="text-decoration-none">
-                    {{ law.title }}
+                <a href="{% url 'law_detail' law.id %}{% if query %}?q={{ query }}{% endif %}"
+                   class="text-decoration-none">
+                    {{ law.title|highlight:query|safe }}
                 </a>
             </h5>
-            <span class="badge bg-secondary">{{ law.category }}</span>
+
+            <!-- 📂 Category -->
+            <span class="badge bg-secondary">
+                {{ law.category }}
+            </span>
+
+            <!-- 🧠 Smart Snippet -->
+            {% if law.snippet %}
+                <p class="text-muted mt-2" style="white-space: pre-line;">
+                    {{ law.snippet|highlight:query|safe }}
+                </p>
+            {% endif %}
+
         </div>
     </div>
 {% empty %}
     <div class="alert alert-warning">
-        Хууль олдсонгүй.
+        Хайлтанд тохирох хууль олдсонгүй.
     </div>
 {% endfor %}
 
-<!-- 📄 Pagination -->
+<!-- 📄 PAGINATION -->
 <nav class="mt-4">
     <ul class="pagination justify-content-center">
 
         {% if page_obj.has_previous %}
             <li class="page-item">
                 <a class="page-link"
-                   href="?q={{ request.GET.q }}&category={{ request.GET.category }}&page={{ page_obj.previous_page_number }}">
+                   href="?{% if query %}q={{ query }}&{% endif %}
+                          {% if request.GET.category %}category={{ request.GET.category }}&{% endif %}
+                          page={{ page_obj.previous_page_number }}">
                     Previous
                 </a>
             </li>
@@ -72,7 +103,9 @@
         {% if page_obj.has_next %}
             <li class="page-item">
                 <a class="page-link"
-                   href="?q={{ request.GET.q }}&category={{ request.GET.category }}&page={{ page_obj.next_page_number }}">
+                   href="?{% if query %}q={{ query }}&{% endif %}
+                          {% if request.GET.category %}category={{ request.GET.category }}&{% endif %}
+                          page={{ page_obj.next_page_number }}">
                     Next
                 </a>
             </li>

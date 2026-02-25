@@ -1,19 +1,39 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<h2>My Bookmarks</h2>
+<div class="container mt-4">
 
-{% for b in bookmarks %}
-    <div class="card mb-2">
-        <div class="card-body">
-            <a href="{% url 'law_detail' b.law.id %}">
-                {{ b.law.title }}
-            </a>
+    <h2 class="mb-4">⭐ My Bookmarks</h2>
+
+    {% if bookmarks %}
+        {% for bookmark in bookmarks %}
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+
+                    <h5>
+                        <a href="{% url 'law_detail' bookmark.law.id %}"
+                           class="text-decoration-none">
+                            {{ bookmark.law.title }}
+                        </a>
+                    </h5>
+
+                    <span class="badge bg-secondary">
+                        {{ bookmark.law.category }}
+                    </span>
+
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-warning">
+            Та одоогоор bookmark хийгээгүй байна.
         </div>
-    </div>
-{% empty %}
-    <p>No bookmarks yet.</p>
-{% endfor %}
+    {% endif %}
+
+    <a href="{% url 'law_list' %}" class="btn btn-outline-dark mt-3">
+        ← Буцах
+    </a>
+
+</div>
 
 {% endblock %}

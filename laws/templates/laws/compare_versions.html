@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="mb-3">
+        🔍 {{ law.title }} - Version Compare
+    </h3>
+
+    <form method="GET" class="row g-3 mb-4">
+
+        <div class="col-md-5">
+            <select name="v1" class="form-select" required>
+                <option value="">Old version</option>
+                {% for v in versions %}
+                    <option value="{{ v.id }}">
+                        {{ v.effective_date }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-5">
+            <select name="v2" class="form-select" required>
+                <option value="">New version</option>
+                {% for v in versions %}
+                    <option value="{{ v.id }}">
+                        {{ v.effective_date }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-warning w-100">
+                Compare
+            </button>
+        </div>
+
+    </form>
+
+    {% if diff_html %}
+        <div class="card shadow-sm">
+            <div class="card-body table-responsive diff-container">
+                {{ diff_html|safe }}
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+.diff-container table {
+    width: 100%;
+    font-size: 14px;
+}
+
+.diff_add {
+    background-color: #d4edda !important;
+}
+
+.diff_sub {
+    background-color: #f8d7da !important;
+}
+
+.diff_chg {
+    background-color: #fff3cd !important;
+}
+
+.diff_header {
+    background-color: #343a40 !important;
+    color: white !important;
+}
+</style>
+
+{% endblock %}
